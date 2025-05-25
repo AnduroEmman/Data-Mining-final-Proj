@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import shap
+import numpy as np
 
 # Load scaler, model, and feature columns
 scaler = joblib.load('scaler.pkl')
@@ -149,9 +150,14 @@ if st.button("Predict Price"):
     # --- SHAP Plot ---
     with st.expander("📈 SHAP Values (Model Interpretability)"):
         st.markdown("SHAP helps explain how each feature impacts the prediction.")
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(input_scaled)
-        shap.initjs()
 
-        fig_shap = shap.plots._waterfall.waterfall_legacy(explainer.expected_value[0], shap_values[0][0], input_df.iloc[0])
-        st.pyplot(fig_shap, clear_figure=True)
+        explainer = shap.Explainer(model, feature_names=feature_columns)
+        shap_values = explainer(input_df)  # Use unscaled, encoded input_df here
+
+        shap.initjs()
+        expected_value = shap_values.base_values[0]
+        instance_shap_vals = shap_values.values[0]
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        shap.plots._waterfall.waterfall_legacy(expected_value, instance_shap_vals, input_df.iloc[0], show=False)
+        st.pyplot(fig)

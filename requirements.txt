@@ -1,11 +1,9 @@
-# Streamlit app requirements
 streamlit
 pandas
 scikit-learn
 joblib
-
-# Optional: if your label encoders rely on numpy
+matplotlib
+seaborn
+shap
 numpy
-
-# Optional: for JSON handling and compatibility
 json5
