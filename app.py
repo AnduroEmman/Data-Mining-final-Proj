@@ -154,7 +154,7 @@ if st.button("Predict Price"):
         explainer = shap.Explainer(model, feature_names=feature_columns)
         shap_values = explainer(input_df)  # Use unscaled, encoded input_df here
 
-        shap.initjs()
+        
         expected_value = shap_values.base_values[0]
         instance_shap_vals = shap_values.values[0]
 
